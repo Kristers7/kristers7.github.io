@@ -7,12 +7,19 @@
 	<title>smth</title>
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
 		integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+	<!-- Search addition-->
 	<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
 		integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 	<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+	<!-- Addded to extract data from csv-->
 	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
+	<!-- Here Clusterting is added-->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+	<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
 	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
 	<style>
 		body {
@@ -46,7 +53,7 @@
 
 	.info-box {
 		position: absolute;
-		background: rgb(255, 255, 255);
+		background: rgb(104, 104, 104);
 		font-family: Helvetica;
 		font-size: 13px;
 		width: 240px;
@@ -54,7 +61,7 @@
 		top: 80px;
 		height: auto;
 		border-radius: 25px;
-		border: 2px solid #2157ad;
+		border: 2px solid #ffffff;
 		padding: 10px;
 		z-index: 10000;
 	}
@@ -62,10 +69,11 @@
 
 <script>
 	// MAP
-	var map = L.map('map').setView([56.949, 24.105], 12);
-	L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	var map = L.map('map').setView([56.949, 24.105], 8);
+	L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}', {
 		maxZoom: 19,
-		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+		attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+		ext: 'png'
 	}).addTo(map);
 
 	L.Control.geocoder().addTo(map);
@@ -92,18 +100,7 @@
 	var marker = L.marker([56.944530, 24.115630]).addTo(map);
 	marker.bindPopup("<b>Id = centralTirgus</b>  <p>PLatība:</p> <p>Cena:</p> ");
 
-	var marker = L.marker([56.952789, 24.112539]).addTo(map);
-	marker.bindPopup("<b>Id = RV1ģ</b>  <p>PLatība:</p> <p>Cena:</p> ");
-
-	var marker = L.marker([56.935829, 24.071930]).addTo(map);
-	marker.bindPopup("<b>Id = Agenskalna iela</b>  <p>PLatība:</p> <p>Cena:</p> ");
-
-	var marker = L.marker([56.943230, 24.006280]).addTo(map);
-	marker.bindPopup("<b>Id = 21-41</b>  <p>PLatība:</p> <p>Cena:</p> ");
-
-	var marker = L.marker([56.9435151, 24.0091452]).addTo(map);
-	marker.bindPopup("<b>Id = 21-47</b>  <p>PLatība:</p> <p>Cena:</p> ");
-
+	var markers = L.markerClusterGroup();
 
 	$.get('./TG_XLSX_2023.csv', function (csvString) {
 
@@ -117,15 +114,19 @@
 
 			var marker = L.marker([row.Lat, row.Long], {
 				opacity: 1
-			}).bindPopup(row.Adrese);
+			}).bindPopup(row.Adrese + '<p> </p>Cena:' + row.eur + 'eur');
 
-			marker.addTo(map);
+			markers.addLayer(marker);
+
 		}
 
 	});
 
+	map.addLayer(markers);
+
 	map.attributionControl.setPrefix(
-		'View <a href="https://github.com/HandsOnDataViz/leaflet-map-csv" target="_blank">code on GitHub</a>'
+		'View <a href="https://github.com/HandsOnDataViz/leaflet-map-csv" target="_blank">HandsOnDataViz</a> / ' +
+		'<a href="https://github.com/Leaflet/Leaflet.markercluster" target="_blank">Leaflet.markercluster</a>'
 	);
 
 
