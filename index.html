@@ -97,9 +97,6 @@
 		var div = L.DomUtil.get('overlay');
 	*/
 	// Here we add objects
-	var marker = L.marker([56.944530, 24.115630]).addTo(map);
-	marker.bindPopup("<b>Id = centralTirgus</b>  <p>PLatība:</p> <p>Cena:</p> ");
-
 	var markers = L.markerClusterGroup();
 
 	$.get('./TG_XLSX_2023.csv', function (csvString) {
