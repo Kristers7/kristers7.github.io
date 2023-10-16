@@ -111,7 +111,7 @@
 
 			var marker = L.marker([row.Lat, row.Long], {
 				opacity: 1
-			}).bindPopup(row.Adrese + '<p> </p>Cena:' + row.eur + 'eur');
+			}).bindPopup(row.Adrese + '<p> </p>Cena:' + row.eur + 'eur' + '<p> </p>Platība:' + row.dzivokla_platiba + ' m2');
 
 			markers.addLayer(marker);
 
