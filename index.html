@@ -99,7 +99,7 @@
 	// Here we add objects
 	var markers = L.markerClusterGroup();
 
-	$.get('./TG_XLSX_2023.csv', function (csvString) {
+	$.get('./TG_CSV_2022_csv.csv', function (csvString) {
 
 		// Use PapaParse to convert string to array of objects
 		var data = Papa.parse(csvString, { header: true, dynamicTyping: true }).data;
@@ -108,12 +108,20 @@
 		// For each row, columns `Latitude`, `Longitude`, and `Title` are required
 		for (var i in data) {
 			var row = data[i];
+			try {
+				var marker = L.marker([row.Lat, row.Long], {
+					opacity: 1
+				}).bindPopup(row.Adrese + '<p> </p>Cena:' + row.eur + 'eur' + '<p> </p>Platība:' + row.dzivokla_platiba + ' m2' + '<p> </p>Datums:' + row.darijuma_datums);
+			
+				markers.addLayer(marker);
+			
+			} catch (e) {
+				break;
+				console.error(e + "Datu beigas!");
+			}
 
-			var marker = L.marker([row.Lat, row.Long], {
-				opacity: 1
-			}).bindPopup(row.Adrese + '<p> </p>Cena:' + row.eur + 'eur' + '<p> </p>Platība:' + row.dzivokla_platiba + ' m2');
 
-			markers.addLayer(marker);
+
 
 		}
 
